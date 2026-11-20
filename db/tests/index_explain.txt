@@ -1,0 +1,23 @@
+=== Query: approved permits expiring in the next 30 days
+--- WITH the partial index idx_permits_approved_expiry
+                                                        QUERY PLAN                                                        
+--------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on permits (actual rows=351 loops=1)
+   Recheck Cond: ((expiry_date >= CURRENT_DATE) AND (expiry_date <= (CURRENT_DATE + 30)) AND (status = 'Approved'::text))
+   Heap Blocks: exact=73
+   ->  Bitmap Index Scan on idx_permits_approved_expiry (actual rows=351 loops=1)
+         Index Cond: ((expiry_date >= CURRENT_DATE) AND (expiry_date <= (CURRENT_DATE + 30)))
+ Planning Time: 0.325 ms
+ Execution Time: 0.274 ms
+(7 rows)
+
+--- WITHOUT the indexes (the database must read every row)
+                                                     QUERY PLAN                                                     
+--------------------------------------------------------------------------------------------------------------------
+ Seq Scan on permits (actual rows=351 loops=1)
+   Filter: ((status = 'Approved'::text) AND (expiry_date >= CURRENT_DATE) AND (expiry_date <= (CURRENT_DATE + 30)))
+   Rows Removed by Filter: 39669
+ Planning Time: 0.092 ms
+ Execution Time: 5.259 ms
+(5 rows)
+

@@ -1,0 +1,60 @@
+Output format is aligned.
+ id |    area    |                               test                                | result 
+----+------------+-------------------------------------------------------------------+--------
+  1 | Constraint | Phone with letters is rejected                                    | PASS
+  2 | Constraint | Unknown district is rejected (foreign key)                        | PASS
+  3 | Constraint | Name shorter than 3 characters is rejected                        | PASS
+  4 | Constraint | Invalid status value is rejected                                  | PASS
+  5 | Constraint | Details shorter than 3 characters are rejected                    | PASS
+  6 | Constraint | Permit for unknown applicant is rejected                          | PASS
+  7 | Constraint | Applicant with permits cannot be deleted (RESTRICT)               | PASS
+  8 | Constraint | Expiry date before issue date is rejected                         | PASS
+  9 | Constraint | Approved permit without expiry date is rejected                   | PASS
+ 10 | Constraint | Malformed permit ID is rejected                                   | PASS
+ 11 | Trigger    | Under Review -> Submitted (going backwards) is refused            | PASS
+ 12 | Trigger    | Submitted -> Approved is refused                                  | PASS
+ 13 | Trigger    | Rejected -> Under Review is refused                               | PASS
+ 14 | Trigger    | Expired -> Approved without a new expiry date is refused          | PASS
+ 15 | Trigger    | Wrong office on insert is refused                                 | PASS
+ 16 | Trigger    | Wrong office on update is refused                                 | PASS
+ 17 | Trigger    | Duplicate live application is refused                             | PASS
+ 18 | Trigger    | Re-applying after a rejection is allowed                          | PASS
+ 19 | Trigger    | Approval sets issue date to today                                 | PASS
+ 20 | Trigger    | Building permit expiry is 3 x 365 days after issue                | PASS
+ 21 | Trigger    | History has 3 rows for PRM-017 (created, review, approved)        | PASS
+ 22 | Trigger    | History records the status change text                            | PASS
+ 23 | Trigger    | Renewal of an expired permit is allowed and logged                | PASS
+ 24 | Function   | fn_next_id gives APP-013                                          | PASS
+ 25 | Function   | fn_next_id gives PRM-102 after PRM-101                            | PASS
+ 26 | Function   | fn_next_id rejects an unknown prefix                              | PASS
+ 27 | Function   | fn_permit_fee returns 100, 500 and 1500                           | PASS
+ 28 | Function   | fn_permit_fee rejects an unknown kind                             | PASS
+ 29 | Function   | fn_office_handles is true for the right office                    | PASS
+ 30 | Function   | fn_office_handles is false for the wrong office                   | PASS
+ 31 | Function   | fn_days_to_expiry matches the dates                               | PASS
+ 32 | Function   | fn_days_to_expiry is NULL when there is no expiry date            | PASS
+ 33 | Function   | fn_expire_overdue_permits expires exactly one permit              | PASS
+ 34 | Function   | The overdue permit is now Expired                                 | PASS
+ 35 | Procedure  | sp_decide_permit review then approve works                        | PASS
+ 36 | Procedure  | sp_decide_permit renew adds one more year                         | PASS
+ 37 | Procedure  | sp_decide_permit refuses the wrong office                         | PASS
+ 38 | Procedure  | sp_decide_permit refuses an unknown decision                      | PASS
+ 39 | Procedure  | sp_decide_permit refuses an unknown permit                        | PASS
+ 40 | Procedure  | sp_decide_permit refuses to renew a submitted permit              | PASS
+ 41 | Procedure  | sp_register_applicant_and_permit is all-or-nothing                | PASS
+ 42 | Procedure  | sp_register_applicant_and_permit creates both rows                | PASS
+ 43 | View       | v_status_summary has 5 rows                                       | PASS
+ 44 | View       | v_status_summary adds up to the number of permits                 | PASS
+ 45 | View       | v_permit_details has one row per permit                           | PASS
+ 46 | View       | v_expiring_soon contains only approved permits due within 30 days | PASS
+ 47 | View       | v_revenue_by_type totals at least Le 3,800 for approved permits   | PASS
+ 48 | Index      | All 7 custom indexes exist                                        | PASS
+ 49 | Index      | The partial index only covers approved permits                    | PASS
+(49 rows)
+
+ passed | failed | total 
+--------+--------+-------
+     49 |      0 |    49
+(1 row)
+
+ROLLBACK
